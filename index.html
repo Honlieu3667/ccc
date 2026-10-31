@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test Personal Colour – Tìm bảng màu cá nhân của bạn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   1. BIẾN MÀU & NỀN TẢNG
+   ========================================================= */
+:root{
+  --ink:#2A2230;        /* chữ chính */
+  --muted:#6F6577;      /* chữ phụ */
+  --paper:#FBF8F5;      /* nền trang */
+  --card:#FFFFFF;
+  --line:#E9E2DC;
+  --accent:#B4486B;     /* hồng mận – màu nhấn */
+  --accent-soft:#F6E3EA;
+  --warm:#E08A3C; --cool:#5B7FC7;
+  --radius:18px;
+  --shadow:0 10px 30px rgba(42,34,48,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Be Vietnam Pro",Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;font-size:16px}
+h1,h2,h3{font-family:"Playfair Display",Georgia,serif;line-height:1.2}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+section{padding:72px 0;scroll-margin-top:62px}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:10px}
+.lead{color:var(--muted);max-width:640px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:inherit;font-weight:600;
+  padding:13px 24px;border-radius:999px;background:var(--ink);color:#fff;text-decoration:none;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:#000}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:#fff}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+
+/* =========================================================
+   2. THANH ĐIỀU HƯỚNG
+   ========================================================= */
+nav{position:sticky;top:0;z-index:20;background:rgba(251,248,245,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+.logo{font-family:"Playfair Display",serif;font-weight:700;font-size:20px;display:flex;align-items:center;gap:10px}
+.logo-dots{display:flex}
+.logo-dots i{width:14px;height:14px;border-radius:50%;margin-left:-4px;border:2px solid var(--paper)}
+nav ul{display:flex;gap:26px;list-style:none;font-size:14px;font-weight:500}
+nav a{text-decoration:none;color:var(--ink)}
+nav a:hover{color:var(--accent)}
+
+/* =========================================================
+   3. HERO
+   ========================================================= */
+.hero{padding:80px 0 60px;display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(38px,5.4vw,62px);margin-bottom:18px}
+.hero h1 em{color:var(--accent);font-style:italic}
+.hero .lead{font-size:18px;margin-bottom:28px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.wheel{position:relative;width:100%;aspect-ratio:1;max-width:400px;margin-left:auto}
+.wheel .seg{position:absolute;inset:0;border-radius:50%}
+.wheel .center{position:absolute;inset:26%;border-radius:50%;background:var(--paper);display:grid;place-items:center;text-align:center;
+  box-shadow:var(--shadow);font-family:"Playfair Display",serif;font-size:22px;padding:10px}
+.wheel .center small{display:block;font-family:"Be Vietnam Pro";font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+
+/* =========================================================
+   4. KIẾN THỨC: 3 YẾU TỐ + 4 MÙA
+   ========================================================= */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:34px}
+.card{background:var(--card);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow)}
+.card h3{font-size:22px;margin:14px 0 8px}
+.card p{color:var(--muted);font-size:15px}
+.scale{height:14px;border-radius:99px}
+.seasons4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:30px}
+.season-card{border-radius:var(--radius);padding:22px;color:#fff;min-height:200px;display:flex;flex-direction:column;justify-content:space-between}
+.season-card h3{font-size:24px}
+.season-card p{font-size:14px;opacity:.95}
+.season-card .chips{display:flex;gap:6px;margin-top:12px}
+.season-card .chips i{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.7)}
+
+/* =========================================================
+   5. BÀI TEST (QUIZ)
+   ========================================================= */
+#quiz{background:linear-gradient(180deg,var(--paper),#F4EDF0)}
+.quiz-box{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:36px;margin-top:30px;max-width:780px}
+.progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:8px}
+.progress span{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.q-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:22px}
+.q-tag{background:var(--accent-soft);color:var(--accent);padding:2px 10px;border-radius:99px;font-weight:600}
+.q-title{font-size:24px;margin-bottom:6px}
+.q-hint{color:var(--muted);font-size:14px;margin-bottom:20px}
+.options{display:grid;gap:12px}
+.opt{display:flex;align-items:center;gap:14px;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:14px;
+  padding:14px 16px;font:inherit;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--accent)}
+.opt.selected{border-color:var(--accent);background:var(--accent-soft)}
+.opt .sw{flex:0 0 38px;height:38px;border-radius:10px;border:1px solid rgba(0,0,0,.08)}
+.opt b{display:block;font-weight:600}
+.opt small{color:var(--muted)}
+.q-nav{display:flex;justify-content:space-between;margin-top:26px}
+
+/* =========================================================
+   6. KẾT QUẢ
+   ========================================================= */
+#result{display:none}
+.result-head{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin-top:26px}
+.result-name{font-size:clamp(36px,5vw,54px)}
+.result-en{font-family:"Playfair Display",serif;font-style:italic;color:var(--muted);font-size:20px;margin-bottom:14px}
+.axes{display:grid;gap:16px;margin:22px 0}
+.axis label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+.axis .bar{position:relative;height:12px;border-radius:99px}
+.axis .dot{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--ink);transform:translate(-50%,-50%);transition:left .6s}
+.palette{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.swatch{border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06);cursor:pointer;border:0;font:inherit;text-align:left}
+.swatch .c{aspect-ratio:1/0.8}
+.swatch .t{padding:6px 8px;font-size:11px;line-height:1.3}
+.swatch .t b{display:block;font-size:12px}
+.tips{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.tips .card h3{font-size:18px;margin-top:0}
+.tips ul{padding-left:18px;color:var(--muted);font-size:14px}
+.avoid{display:flex;gap:8px;margin-top:10px}
+.avoid i{width:30px;height:30px;border-radius:8px;position:relative}
+.avoid i::after{content:"";position:absolute;left:-3px;right:-3px;top:50%;height:2px;background:#fff;transform:rotate(-35deg);box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+.result-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.note{font-size:13px;color:var(--muted)}
+
+/* =========================================================
+   7. GƯƠNG THỬ MÀU (DRAPING)
+   ========================================================= */
+.drape-layout{display:grid;grid-template-columns:1.3fr 1fr;gap:30px;margin-top:30px;align-items:start}
+.mirrors{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mirror{border-radius:24px;padding:34px 34px 0;display:flex;flex-direction:column;align-items:center;transition:background .35s;min-height:300px;justify-content:flex-end;overflow:hidden}
+.mirror .face{width:100%;aspect-ratio:3/4;border-radius:999px 999px 0 0;background:#E7DFD8 center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:13px;text-align:center;padding:20px}
+.mirror-label{text-align:center;font-size:13px;font-weight:600;margin-top:8px}
+.upload{display:block;border:2px dashed var(--line);border-radius:18px;padding:22px;text-align:center;cursor:pointer;background:#fff;transition:border-color .15s}
+.upload:hover{border-color:var(--accent)}
+.upload input{display:none}
+.pairs{display:grid;gap:10px;margin-top:18px}
+.pair{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:10px 14px;cursor:pointer;font:inherit;text-align:left}
+.pair.active{border-color:var(--accent);background:var(--accent-soft)}
+.pair .duo{display:flex;flex:0 0 auto}
+.pair .duo i{width:26px;height:26px;border-radius:50%;border:2px solid #fff;margin-left:-6px;box-shadow:0 0 0 1px #D8D0CA}
+.pair .duo i:first-child{margin-left:0}
+.pair small{display:block;color:var(--muted);font-size:12px}
+
+/* =========================================================
+   8. THƯ VIỆN 12 MÙA
+   ========================================================= */
+.lib{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.lib-item{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);cursor:pointer;border:0;font:inherit;text-align:left;transition:transform .15s}
+.lib-item:hover{transform:translateY(-3px)}
+.lib-item .strip{display:flex;height:46px;border-radius:10px;overflow:hidden;margin-bottom:12px}
+.lib-item .strip i{flex:1}
+.lib-item h3{font-size:18px}
+.lib-item small{color:var(--muted)}
+
+footer{padding:40px 0;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,80px);opacity:0;background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;transition:transform .3s;z-index:50}
+.toast.show{transform:translate(-50%,0);opacity:1}
+
+/* =========================================================
+   9. RESPONSIVE (điện thoại, máy tính bảng)
+   ========================================================= */
+@media (max-width:880px){
+  .hero,.result-head,.drape-layout{grid-template-columns:1fr}
+  .wheel{margin:0 auto;max-width:300px}
+  .grid3,.tips{grid-template-columns:1fr}
+  .seasons4{grid-template-columns:1fr 1fr}
+  .lib{grid-template-columns:1fr 1fr}
+  nav ul{display:none}
+}
+@media (max-width:520px){
+  .quiz-box{padding:22px}
+  .palette{grid-template-columns:repeat(4,1fr)}
+  .lib,.seasons4{grid-template-columns:1fr}
+  .mirror{padding:20px 20px 0}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= THANH ĐIỀU HƯỚNG ================= -->
+<nav>
+  <div class="wrap">
+    <div class="logo">
+      <span class="logo-dots"><i style="background:#F2A65A"></i><i style="background:#9CB4E0"></i><i style="background:#B5651D"></i><i style="background:#2E2A6B"></i></span>
+      Personal Colour
+    </div>
+    <ul>
+      <li><a href="#learn">Kiến thức</a></li>
+      <li><a href="#quiz">Làm test</a></li>
+      <li><a href="#drape">Gương thử màu</a></li>
+      <li><a href="#library">12 mùa</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="wrap hero">
+  <div>
+    <p class="eyebrow">Phân tích màu sắc cá nhân · 12 mùa</p>
+    <h1>Màu nào khiến bạn <em>rạng rỡ</em> nhất?</h1>
+    <p class="lead">Trả lời 12 câu hỏi về tông da, màu tóc, màu mắt và độ tương phản để tìm ra “mùa” của bạn, kèm bảng màu quần áo, son môi và trang sức phù hợp. Sau đó tải ảnh lên gương thử màu để tự kiểm chứng.</p>
+    <div class="hero-actions">
+      <a class="btn" href="#quiz">Bắt đầu test →</a>
+      <a class="btn ghost" href="#learn">Personal colour là gì?</a>
+    </div>
+  </div>
+  <div class="wheel" aria-hidden="true">
+    <div class="seg" id="wheelSeg"></div>
+    <div class="center"><div><small>12 mùa</small>Xuân · Hạ<br>Thu · Đông</div></div>
+  </div>
+</header>
+
+<!-- ================= KIẾN THỨC ================= -->
+<section id="learn">
+  <div class="wrap">
+    <p class="eyebrow">Kiến thức nền</p>
+    <h2 style="font-size:40px">Ba yếu tố quyết định “mùa” của bạn</h2>
+    <p class="lead" style="margin-top:10px">Hệ thống 12 mùa đánh giá màu tự nhiên của da, tóc và mắt theo ba chiều của màu sắc. Mỗi mùa là một tổ hợp riêng của ba chiều này.</p>
+    <div class="grid3">
+      <div class="card">
+        <div class="scale" style="background:linear-gradient(90deg,#5B7FC7,#C9B8C8,#E08A3C)"></div>
+        <h3>1. Tông nền (Undertone)</h3>
+        <p>Sắc tố nằm dưới bề mặt da: <b>ấm</b> (ánh vàng, đào, vàng đồng) hay <b>lạnh</b> (ánh hồng, xanh). Tông nền không đổi khi da bị rám nắng.</p>
+      </div>
+      <div class="card">
+        <div class="scale" style="background:linear-gradient(90deg,#F7F1E8,#A58B7A,#2B211C)"></div>
+        <h3>2. Độ sáng (Value)</h3>
+        <p>Tổng thể tóc, mắt, da của bạn trông <b>sáng nhạt</b> hay <b>sâu đậm</b>. Người có màu tự nhiên đậm hợp với màu đậm, và ngược lại.</p>
+      </div>
+      <div class="card">
+        <div class="scale" style="background:linear-gradient(90deg,#9A9493,#B68A9B,#FF2E7E)"></div>
+        <h3>3. Độ trong (Chroma)</h3>
+        <p>Màu tự nhiên của bạn <b>trong, rực, tương phản cao</b> hay <b>dịu, mờ, hoà quyện</b>. Quyết định bạn hợp màu tươi hay màu pha xám.</p>
+      </div>
+    </div>
+
+    <h2 style="font-size:32px;margin-top:64px">Bốn mùa chính</h2>
+    <div class="seasons4">
+      <div class="season-card" style="background:#E9915A">
+        <div><h3>Xuân · Spring</h3><p>Ấm, sáng, tươi. Hợp màu đào, san hô, vàng kem, xanh ngọc.</p></div>
+        <div class="chips"><i style="background:#FFB38A"></i><i style="background:#FFD966"></i><i style="background:#40B5AD"></i><i style="background:#FF7F50"></i></div>
+      </div>
+      <div class="season-card" style="background:#8C9CC8">
+        <div><h3>Hạ · Summer</h3><p>Lạnh, sáng, dịu. Hợp màu pastel pha xám: hồng phấn, lavender, xanh khói.</p></div>
+        <div class="chips"><i style="background:#F4C2C2"></i><i style="background:#C8A2C8"></i><i style="background:#B8D8F0"></i><i style="background:#708090"></i></div>
+      </div>
+      <div class="season-card" style="background:#9B5A2E">
+        <div><h3>Thu · Autumn</h3><p>Ấm, đậm, dịu. Hợp màu đất: nâu, cam cháy, vàng mù tạt, xanh rêu.</p></div>
+        <div class="chips"><i style="background:#CC5500"></i><i style="background:#DAA520"></i><i style="background:#556B2F"></i><i style="background:#C19A6B"></i></div>
+      </div>
+      <div class="season-card" style="background:#2E2A55">
+        <div><h3>Đông · Winter</h3><p>Lạnh, đậm, rực. Hợp màu tương phản: đen, trắng tinh, đỏ ruby, xanh coban.</p></div>
+        <div class="chips"><i style="background:#FFFFFF"></i><i style="background:#E0115F"></i><i style="background:#0047AB"></i><i style="background:#000000"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BÀI TEST ================= -->
+<section id="quiz">
+  <div class="wrap">
+    <p class="eyebrow">Bài test · 12 câu · khoảng 3 phút</p>
+    <h2 style="font-size:40px">Tìm mùa của bạn</h2>
+    <p class="lead" style="margin-top:10px">Mẹo: làm test vào ban ngày, cạnh cửa sổ có ánh sáng tự nhiên, mặt mộc không trang điểm và dùng màu tóc tự nhiên (chưa nhuộm).</p>
+
+    <div class="quiz-box" id="quizBox">
+      <div class="progress"><span id="progBar"></span></div>
+      <div class="q-meta"><span id="qCount">Câu 1/12</span><span class="q-tag" id="qTag">Tông nền</span></div>
+      <h3 class="q-title" id="qTitle"></h3>
+      <p class="q-hint" id="qHint"></p>
+      <div class="options" id="qOptions"></div>
+      <div class="q-nav">
+        <button class="btn ghost" id="prevBtn">← Quay lại</button>
+        <button class="btn" id="nextBtn" disabled>Tiếp theo →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= KẾT QUẢ ================= -->
+<section id="result">
+  <div class="wrap">
+    <p class="eyebrow">Kết quả của bạn</p>
+    <div class="result-head">
+      <div>
+        <h2 class="result-name" id="rName"></h2>
+        <p class="result-en" id="rEn"></p>
+        <p id="rDesc"></p>
+        <div class="axes" id="rAxes"></div>
+        <p class="note" id="rAlt"></p>
+      </div>
+      <div>
+        <h3 style="font-size:20px;margin-bottom:12px">Bảng màu của bạn <span class="note">(bấm vào ô màu để sao chép mã HEX)</span></h3>
+        <div class="palette" id="rPalette"></div>
+        <h3 style="font-size:18px;margin:22px 0 4px">Màu nên hạn chế gần mặt</h3>
+        <div class="avoid" id="rAvoid"></div>
+      </div>
+    </div>
+    <div class="tips" id="rTips"></div>
+    <div class="result-actions">
+      <a class="btn" href="#drape">Thử bảng màu với ảnh của bạn →</a>
+      <button class="btn ghost" id="copyResult">Sao chép kết quả</button>
+      <button class="btn ghost" id="redo">Làm lại test</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GƯƠNG THỬ MÀU ================= -->
+<section id="drape" style="background:#fff">
+  <div class="wrap">
+    <p class="eyebrow">Gương thử màu · Draping</p>
+    <h2 style="font-size:40px">Tự kiểm chứng bằng ảnh của bạn</h2>
+    <p class="lead" style="margin-top:10px">Chuyên gia phân tích màu đặt các tấm vải màu dưới cằm khách để so sánh. Bạn cũng làm được như vậy: tải một ảnh chân dung mặt mộc, chọn cặp màu và xem bên nào làm da sáng, đều màu và mắt có hồn hơn. Ảnh chỉ hiển thị trên máy của bạn, không được tải lên đâu cả.</p>
+
+    <div class="drape-layout">
+      <div>
+        <div class="mirrors">
+          <div>
+            <div class="mirror" id="mirrorA"><div class="face" id="faceA">Ảnh của bạn sẽ hiện ở đây</div></div>
+            <p class="mirror-label" id="labelA"></p>
+          </div>
+          <div>
+            <div class="mirror" id="mirrorB"><div class="face" id="faceB">Ảnh của bạn sẽ hiện ở đây</div></div>
+            <p class="mirror-label" id="labelB"></p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <label class="upload">
+          <input type="file" accept="image/*" id="fileInput">
+          <b>📷 Chọn ảnh chân dung</b><br>
+          <small class="note">Ảnh chụp thẳng mặt, ánh sáng tự nhiên, không filter</small>
+        </label>
+        <div class="pairs" id="pairs"></div>
+        <p class="note" style="margin-top:14px">Dấu hiệu màu hợp: quầng thâm, vết đỏ mờ đi, da trông mịn và khoẻ hơn. Dấu hiệu màu không hợp: da xám, vàng vọt, bóng dầu hoặc khuôn mặt “chìm” sau màu áo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THƯ VIỆN 12 MÙA ================= -->
+<section id="library">
+  <div class="wrap">
+    <p class="eyebrow">Thư viện</p>
+    <h2 style="font-size:40px">Cả 12 mùa</h2>
+    <p class="lead" style="margin-top:10px">Bấm vào một mùa để xem bảng màu và gợi ý chi tiết.</p>
+    <div class="lib" id="lib"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Kết quả chỉ mang tính tham khảo. Ánh sáng, màn hình và tóc nhuộm đều có thể làm sai lệch đánh giá. Để chính xác nhất, hãy phân tích trực tiếp với chuyên gia bằng vải màu dưới ánh sáng chuẩn.
+  </div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   DỮ LIỆU 12 MÙA
+   Mỗi mùa: tên, mô tả, bảng màu [mã HEX, tên màu], màu cần tránh,
+   gợi ý trang điểm và trang sức.
+   ========================================================= */
+const SEASONS = {
+  lightSpring:{vi:"Xuân Nhạt",en:"Light Spring",family:"spring",
+    desc:"Bạn có vẻ ngoài sáng, nhẹ nhàng và hơi ấm. Màu tươi sáng, trong trẻo như nắng sớm làm bạn rạng rỡ, còn màu quá đậm sẽ “nuốt” khuôn mặt.",
+    palette:[["#FFE5B4","Đào nhạt"],["#F9B7A0","San hô nhạt"],["#FFD966","Vàng bơ"],["#A8E6CF","Bạc hà"],["#9AD0EC","Xanh nước biển nhạt"],
+             ["#F4A6C0","Hồng ấm"],["#C9E4A6","Xanh cốm"],["#FFF1D6","Trắng ngà"],["#E8C39E","Be camel"],["#7EC8C3","Ngọc lam nhạt"]],
+    avoid:["#000000","#4B0082","#5A3A29"],
+    lip:"Hồng đào, san hô nhạt, cam đất nhẹ",metal:"Vàng hồng, vàng nhạt",neutral:"Trắng ngà, be, xanh navy nhạt, xám ấm"},
+  warmSpring:{vi:"Xuân Ấm",en:"Warm (True) Spring",family:"spring",
+    desc:"Tông ấm là đặc điểm nổi bật nhất của bạn. Những màu vàng óng, cam đào, xanh lá tươi khiến làn da bạn bừng sáng.",
+    palette:[["#FF7F50","San hô"],["#FFB347","Mơ chín"],["#F4C430","Vàng nghệ"],["#8DB600","Xanh táo"],["#40B5AD","Ngọc lam"],
+             ["#E9692C","Cam quýt"],["#D2A06D","Camel"],["#FFF4D6","Kem"],["#E2583E","Đỏ cà chua"],["#3CB371","Xanh lá tươi"]],
+    avoid:["#000000","#C0C0C0","#8E7CC3"],
+    lip:"Cam san hô, đỏ cam, hồng đào",metal:"Vàng (gold), đồng thau",neutral:"Kem, camel, nâu sữa, navy ấm"},
+  brightSpring:{vi:"Xuân Rực",en:"Bright Spring",family:"spring",
+    desc:"Bạn có nét tương phản cao, ánh mắt sáng và tông hơi ấm. Màu rực rỡ, bão hoà cao là “vũ khí” của bạn; màu xám, pha bụi làm bạn nhạt nhoà.",
+    palette:[["#FF4F5E","Đỏ dưa hấu"],["#FF8C00","Cam tươi"],["#FFD700","Vàng chanh"],["#00C78C","Xanh ngọc bích"],["#00B5E2","Xanh biển"],
+             ["#FF69B4","Hồng nóng"],["#32CD32","Xanh lá chanh"],["#FFFFF0","Trắng ngà"],["#1E90FF","Xanh dương sáng"],["#7B68EE","Tím xanh"]],
+    avoid:["#A39E93","#8C7853","#B5838D"],
+    lip:"Đỏ san hô, hồng dưa hấu, đỏ tươi",metal:"Vàng sáng bóng, vàng trắng",neutral:"Trắng ngà, navy, xám than ấm"},
+  lightSummer:{vi:"Hạ Nhạt",en:"Light Summer",family:"summer",
+    desc:"Bạn mang vẻ ngoài sáng, mềm mại và hơi lạnh. Các màu pastel lạnh, nhẹ như mây giúp bạn trông thanh thoát; màu đậm và rực sẽ quá nặng.",
+    palette:[["#B8D8F0","Xanh phấn"],["#C8A2C8","Tím lilac"],["#F4C2C2","Hồng phấn"],["#B0E0E6","Xanh băng"],["#D8BFD8","Tím cà nhạt"],
+             ["#98D7C2","Bạc hà lạnh"],["#E6E6FA","Lavender"],["#A7C7E7","Xanh baby"],["#F5F5F5","Trắng sữa"],["#9FA8DA","Xanh dừa cạn"]],
+    avoid:["#000000","#CC5500","#8B4513"],
+    lip:"Hồng phấn, hồng tím nhạt, hồng baby",metal:"Bạc, vàng trắng",neutral:"Xám nhạt, xanh navy nhạt, be hồng"},
+  coolSummer:{vi:"Hạ Lạnh",en:"Cool (True) Summer",family:"summer",
+    desc:"Tông lạnh là đặc điểm chính của bạn. Các màu xanh, hồng, tím có ánh lam và pha chút xám làm da bạn mịn và tươi tắn.",
+    palette:[["#6A8CAF","Xanh khói"],["#8E7CC3","Lavender đậm"],["#D8648F","Hồng mâm xôi"],["#4F86C6","Xanh bầu trời"],["#7FB3D5","Xanh hồ"],
+             ["#5F9EA0","Xanh cadet"],["#B0517D","Hồng mận"],["#C3CDE6","Xanh xám nhạt"],["#708090","Xám đá"],["#2E5A88","Navy dịu"]],
+    avoid:["#FF8C00","#DAA520","#8B4513"],
+    lip:"Hồng mâm xôi, hồng berry, đỏ hồng",metal:"Bạc, bạch kim",neutral:"Xám xanh, navy, trắng sữa"},
+  softSummer:{vi:"Hạ Dịu",en:"Soft Summer",family:"summer",
+    desc:"Màu tự nhiên của bạn hoà quyện, ít tương phản và hơi lạnh. Những màu “pha khói” trầm nhẹ như hồng đất, xanh xám tạo vẻ thanh lịch.",
+    palette:[["#9AA5B1","Xám xanh"],["#A3869B","Tím mauve"],["#7D9C9F","Xanh xám"],["#C48C9A","Hồng đất"],["#8B9DC3","Xanh oải hương"],
+             ["#6E7F80","Xám rêu"],["#B9A9B6","Tím khói"],["#5D6D7E","Xám than xanh"],["#D7C4C4","Be hồng"],["#7A8B99","Xanh đá"]],
+    avoid:["#FF0000","#FF8C00","#000000"],
+    lip:"Hồng đất, nude hồng, mauve",metal:"Bạc mờ, vàng hồng nhạt",neutral:"Xám tro, be hồng, xanh xám đậm"},
+  softAutumn:{vi:"Thu Dịu",en:"Soft Autumn",family:"autumn",
+    desc:"Bạn có vẻ ngoài dịu dàng, ít tương phản và hơi ấm. Màu đất nhẹ, pha xám như sage, camel, hồng đất làm bạn tinh tế; màu neon và đen tuyền lại quá gắt.",
+    palette:[["#C9A27E","Camel"],["#A3B18A","Xanh sage"],["#D4A59A","Đào khói"],["#8C7853","Kaki"],["#B5838D","Hồng gỗ"],
+             ["#6B8E7F","Xanh ngọc dịu"],["#D8B26E","Vàng nhạt dịu"],["#9C6B4E","Nâu quế"],["#E8D5B7","Be"],["#7C9473","Xanh ô liu nhạt"]],
+    avoid:["#000000","#FF0080","#0047FF"],
+    lip:"Nude đào, hồng đất, nâu hồng",metal:"Vàng mờ, đồng",neutral:"Be, kaki, nâu sữa, xám ấm"},
+  warmAutumn:{vi:"Thu Ấm",en:"Warm (True) Autumn",family:"autumn",
+    desc:"Bạn ấm áp, giàu sắc vàng. Những màu của lá mùa thu như cam cháy, vàng mù tạt, xanh rêu giúp bạn trông khoẻ khoắn, sang trọng.",
+    palette:[["#CC5500","Cam cháy"],["#B7410E","Gỉ sắt"],["#DAA520","Vàng mù tạt"],["#808000","Ô liu"],["#8B4513","Nâu yên ngựa"],
+             ["#E1A95F","Vàng đất"],["#556B2F","Xanh rêu"],["#C19A6B","Camel"],["#008080","Xanh mòng két"],["#F5DEB3","Kem lúa mì"]],
+    avoid:["#FF69B4","#B0E0E6","#C0C0C0"],
+    lip:"Đỏ gạch, cam đất, nâu đỏ",metal:"Vàng, đồng, đồng thau",neutral:"Nâu, kem, ô liu, camel"},
+  deepAutumn:{vi:"Thu Đậm",en:"Deep Autumn",family:"autumn",
+    desc:"Bạn có màu tóc, mắt sâu và tông hơi ấm. Màu đậm, giàu sắc tố như nâu socola, đỏ rượu vang, xanh rêu đậm tôn lên chiều sâu của bạn.",
+    palette:[["#7B3F00","Socola"],["#800020","Đỏ burgundy"],["#4B5320","Xanh quân đội"],["#B8860B","Vàng đồng"],["#2F4F4F","Xanh đá đậm"],
+             ["#A0522D","Nâu đất"],["#6B4423","Nâu cà phê"],["#1C4D4A","Ngọc đậm"],["#CD853F","Nâu peru"],["#3B2F2F","Nâu đen"]],
+    avoid:["#E6E6FA","#F4C2C2","#B0E0E6"],
+    lip:"Đỏ rượu vang, nâu đỏ, đỏ gạch đậm",metal:"Vàng đậm, đồng cổ",neutral:"Nâu socola, ô liu đậm, kem"},
+  deepWinter:{vi:"Đông Đậm",en:"Deep Winter",family:"winter",
+    desc:"Bạn có tóc và mắt rất đậm, tông hơi lạnh. Đen tuyền, trắng tinh và những màu ngọc quý đậm như emerald, sapphire, ruby rất hợp với bạn.",
+    palette:[["#000000","Đen tuyền"],["#4B0082","Tím chàm"],["#8B0A50","Đỏ mận"],["#0B3D91","Xanh sapphire"],["#006A4E","Xanh emerald"],
+             ["#FFFFFF","Trắng tinh"],["#36454F","Xám than"],["#C71585","Hồng tím đậm"],["#191970","Xanh nửa đêm"],["#B22222","Đỏ ruby"]],
+    avoid:["#FFDAB9","#F5DEB3","#DAA520"],
+    lip:"Đỏ rượu vang lạnh, mận, đỏ ruby",metal:"Bạc, bạch kim, vàng trắng",neutral:"Đen, trắng tinh, xám than, navy"},
+  coolWinter:{vi:"Đông Lạnh",en:"Cool (True) Winter",family:"winter",
+    desc:"Tông lạnh rõ rệt và tương phản cao. Màu lạnh, sắc nét như xanh coban, đỏ ruby, hồng fuchsia và trắng băng khiến bạn nổi bật.",
+    palette:[["#0047AB","Xanh coban"],["#E0115F","Hồng ruby"],["#009473","Xanh emerald lạnh"],["#8A2BE2","Tím violet"],["#FFFFFF","Trắng tinh"],
+             ["#000000","Đen"],["#87CEEB","Xanh băng"],["#C0C0C0","Bạc"],["#FF00A0","Fuchsia"],["#1C2A5A","Navy đậm"]],
+    avoid:["#CC5500","#DAA520","#C19A6B"],
+    lip:"Đỏ lạnh, hồng fuchsia, berry",metal:"Bạc, bạch kim",neutral:"Đen, trắng, xám lạnh, navy"},
+  brightWinter:{vi:"Đông Rực",en:"Bright Winter",family:"winter",
+    desc:"Bạn có độ tương phản rất cao và ánh mắt trong. Những màu rực, sáng như điện, hồng neon, xanh điện, đỏ tươi là màu của bạn; màu bụi làm bạn mệt mỏi.",
+    palette:[["#FF0080","Hồng neon"],["#0047FF","Xanh điện"],["#00B7EB","Xanh lam sáng"],["#50C878","Xanh ngọc lục"],["#FF2400","Đỏ tươi"],
+             ["#9400D3","Tím đậm"],["#FFFFFF","Trắng tinh"],["#000000","Đen"],["#FFD1DC","Hồng băng"],["#00A86B","Xanh ngọc thạch"]],
+    avoid:["#C9A27E","#A3B18A","#8C7853"],
+    lip:"Đỏ tươi, hồng fuchsia, berry sáng",metal:"Bạc sáng, vàng trắng",neutral:"Đen, trắng tinh, xám than, navy"}
+};
+
+/* =========================================================
+   CÂU HỎI
+   Mỗi đáp án cộng điểm cho 3 trục:
+   t: tông nền  (+ ấm, − lạnh)
+   v: độ sáng   (+ sáng, − đậm)
+   c: độ trong  (+ rực/tương phản, − dịu)
+   ========================================================= */
+const QUESTIONS = [
+  {tag:"Tông nền",title:"Mạch máu ở cổ tay bạn có màu gì?",hint:"Nhìn mặt trong cổ tay dưới ánh sáng tự nhiên.",
+   options:[{l:"Xanh lá / xanh ô liu",sw:"#6B8E4E",s:{t:2}},{l:"Xanh dương / tím",sw:"#5767A8",s:{t:-2}},{l:"Lẫn lộn, khó xác định",sw:"linear-gradient(90deg,#6B8E4E,#5767A8)",s:{t:0}}]},
+  {tag:"Tông nền",title:"Trang sức nào làm da bạn trông sáng và tươi hơn?",hint:"Đặt cả hai sát mặt hoặc cổ rồi so sánh.",
+   options:[{l:"Vàng (gold)",d:"Da trông hồng hào, ấm áp",sw:"linear-gradient(135deg,#B8860B,#FFE08A,#B8860B)",s:{t:2}},
+            {l:"Bạc / vàng trắng",d:"Da trông sáng, trong",sw:"linear-gradient(135deg,#8E8E8E,#F2F2F2,#8E8E8E)",s:{t:-2}},
+            {l:"Cả hai đều hợp",sw:"linear-gradient(90deg,#DAA520 50%,#C0C0C0 50%)",s:{t:0}}]},
+  {tag:"Tông nền",title:"Đặt tờ giấy trắng cạnh mặt, da bạn trông như thế nào?",hint:"Mặt mộc, ánh sáng ban ngày.",
+   options:[{l:"Hơi vàng, vàng đồng hoặc ánh đào",sw:"#E9C29A",s:{t:2}},{l:"Hơi hồng, đỏ hồng hoặc ánh xanh",sw:"#E7B7BE",s:{t:-2}},
+            {l:"Không thấy rõ ánh nào / hơi xám ô liu",sw:"#C9B9A6",s:{t:0,c:-1}}]},
+  {tag:"Tông nền",title:"Áo màu nào hợp với bạn hơn khi mặc sát mặt?",
+   options:[{l:"Trắng ngà, kem",sw:"#F6EBD3",s:{t:2}},{l:"Trắng tinh",sw:"#FFFFFF",s:{t:-2,c:1}},{l:"Cả hai như nhau",sw:"linear-gradient(90deg,#F6EBD3 50%,#FFFFFF 50%)",s:{t:0}}]},
+  {tag:"Tông nền",title:"Khi đi nắng, da bạn thường…",
+   options:[{l:"Rám nâu, vàng đều",sw:"#B07A4F",s:{t:1}},{l:"Ửng đỏ, dễ cháy nắng",sw:"#D9827F",s:{t:-1}},{l:"Đỏ rồi mới rám",sw:"linear-gradient(90deg,#D9827F,#B07A4F)",s:{t:0}}]},
+  {tag:"Độ sáng",title:"Màu tóc tự nhiên (chưa nhuộm) của bạn?",
+   options:[{l:"Nâu sáng / nâu vàng",sw:"#A47551",s:{v:2}},{l:"Nâu đen",sw:"#4A3426",s:{v:-1}},{l:"Đen tuyền",sw:"#14110F",s:{v:-2,c:1}}]},
+  {tag:"Độ sáng",title:"Màu da của bạn gần nhất với…",
+   options:[{l:"Rất trắng sáng",sw:"#F6E1D3",s:{v:2}},{l:"Sáng vừa",sw:"#E8C4A6",s:{v:1}},{l:"Trung bình / bánh mật",sw:"#C69472",s:{v:-1}},{l:"Ngăm đậm",sw:"#8D5B3E",s:{v:-2}}]},
+  {tag:"Độ sáng",title:"Màu mắt của bạn?",hint:"Soi gương gần cửa sổ, nhìn kĩ mống mắt.",
+   options:[{l:"Nâu sáng / hạt dẻ, có ánh vàng",sw:"#8B5A2B",s:{v:1,t:1}},{l:"Nâu đậm",sw:"#4B2E1E",s:{v:-1}},{l:"Đen / nâu đen rất sâu",sw:"#1B1412",s:{v:-2}}]},
+  {tag:"Độ trong",title:"Độ tương phản giữa tóc, mắt và da của bạn?",
+   options:[{l:"Rất rõ: tóc đậm, da sáng, mắt nổi bật",sw:"linear-gradient(90deg,#111 50%,#F6E1D3 50%)",s:{c:2}},
+            {l:"Vừa phải",sw:"linear-gradient(90deg,#4A3426 50%,#E8C4A6 50%)",s:{c:0}},
+            {l:"Thấp: mọi thứ hoà quyện, nhẹ nhàng",sw:"linear-gradient(90deg,#8D6E5A 50%,#C9A58A 50%)",s:{c:-2}}]},
+  {tag:"Độ trong",title:"Khi mặc màu rực rỡ (hồng neon, xanh điện…)?",
+   options:[{l:"Mình trông rạng rỡ, nổi bật",sw:"#FF1F8E",s:{c:2}},{l:"Màu áo lấn át khuôn mặt mình",sw:"#9A9493",s:{c:-2}},{l:"Tuỳ màu, không rõ",sw:"linear-gradient(90deg,#FF1F8E,#9A9493)",s:{c:0}}]},
+  {tag:"Độ trong",title:"Khi mặc màu đen sát mặt?",
+   options:[{l:"Gương mặt sắc nét, sang",sw:"#000",s:{c:1,v:-1,t:-1}},{l:"Trông mệt mỏi, quầng thâm rõ hơn",sw:"#2B2B2B",s:{c:-1,v:1}},{l:"Bình thường",sw:"#555",s:{}}]},
+  {tag:"Tổng hợp",title:"Màu son nào khiến bạn trông tươi tắn nhất?",
+   options:[{l:"Cam san hô",sw:"#FF6F51",s:{t:2,c:1}},{l:"Đỏ cherry / hồng fuchsia",sw:"#D2145A",s:{t:-2,c:1}},
+            {l:"Hồng đất / nude",sw:"#C08081",s:{c:-2}},{l:"Đỏ gạch / nâu đỏ",sw:"#9B3D2E",s:{t:1,v:-1}}]}
+];
+
+/* =========================================================
+   BIẾN TRẠNG THÁI
+   ========================================================= */
+let current = 0;                                  // câu hỏi đang hiển thị
+const answers = new Array(QUESTIONS.length).fill(null); // đáp án đã chọn
+let resultKey = null;                             // mùa tìm được
+const $ = id => document.getElementById(id);
+
+/* ---------- Vòng tròn 12 mùa ở phần hero ---------- */
+(function drawWheel(){
+  const keys = ["lightSpring","warmSpring","brightSpring","brightWinter","coolWinter","deepWinter","deepAutumn","warmAutumn","softAutumn","softSummer","coolSummer","lightSummer"];
+  const step = 360/keys.length;
+  const stops = keys.map((k,i)=>`${SEASONS[k].palette[0][0]} ${i*step}deg ${(i+1)*step}deg`).join(",");
+  $("wheelSeg").style.background = `conic-gradient(${stops})`;
+})();
+
+/* =========================================================
+   HIỂN THỊ CÂU HỎI
+   ========================================================= */
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  $("qCount").textContent = `Câu ${current+1}/${QUESTIONS.length}`;
+  $("qTag").textContent = q.tag;
+  $("qTitle").textContent = q.title;
+  $("qHint").textContent = q.hint || "";
+  $("progBar").style.width = (current/QUESTIONS.length*100)+"%";
+
+  const box = $("qOptions");
+  box.innerHTML = "";
+  q.options.forEach((o,i)=>{
+    const b = document.createElement("button");
+    b.className = "opt" + (answers[current]===i ? " selected" : "");
+    b.innerHTML = `<span class="sw" style="background:${o.sw}"></span><span><b>${o.l}</b>${o.d?`<small>${o.d}</small>`:""}</span>`;
+    b.onclick = () => {
+      answers[current] = i;
+      renderQuestion();
+      // tự chuyển câu sau 0,35 giây cho nhanh
+      setTimeout(()=>{ if(current < QUESTIONS.length-1){ current++; renderQuestion(); } }, 350);
+    };
+    box.appendChild(b);
+  });
+
+  $("prevBtn").disabled = current === 0;
+  const last = current === QUESTIONS.length-1;
+  $("nextBtn").textContent = last ? "Xem kết quả ✨" : "Tiếp theo →";
+  $("nextBtn").disabled = answers[current] === null;
+}
+$("prevBtn").onclick = () => { if(current>0){ current--; renderQuestion(); } };
+$("nextBtn").onclick = () => {
+  if(current < QUESTIONS.length-1){ current++; renderQuestion(); }
+  else showResult();
+};
+
+/* =========================================================
+   TÍNH KẾT QUẢ
+   B1. Cộng điểm 3 trục rồi chuẩn hoá về khoảng −1..+1.
+   B2. Trục nào có trị tuyệt đối lớn nhất là "đặc điểm nổi bật".
+   B3. Kết hợp đặc điểm nổi bật với tông nền để ra 1 trong 12 mùa.
+   ========================================================= */
+function scoreAxes(){
+  const sum = {t:0,v:0,c:0}, max = {t:0,v:0,c:0};
+  QUESTIONS.forEach((q,qi)=>{
+    ["t","v","c"].forEach(a=>{
+      max[a] += Math.max(...q.options.map(o=>Math.abs(o.s[a]||0)));
+    });
+    const o = q.options[answers[qi]];
+    if(o) ["t","v","c"].forEach(a=> sum[a] += (o.s[a]||0));
+  });
+  return {t:sum.t/max.t, v:sum.v/max.v, c:sum.c/max.c};
+}
+
+function pickSeason(s){
+  const warm = s.t >= 0;
+  // trọng số: tông nền là nền tảng nên giảm nhẹ để các trục khác có cơ hội nổi bật
+  const cand = [["t",Math.abs(s.t)*0.9],["v",Math.abs(s.v)],["c",Math.abs(s.c)]].sort((a,b)=>b[1]-a[1]);
+  const dom = cand[0][0];
+  let key;
+  if(dom === "v") key = s.v > 0 ? (warm?"lightSpring":"lightSummer") : (warm?"deepAutumn":"deepWinter");
+  else if(dom === "c") key = s.c > 0 ? (warm?"brightSpring":"brightWinter") : (warm?"softAutumn":"softSummer");
+  else {
+    // tông nền nổi bật: Xuân/Hạ sáng hơn, Thu/Đông đậm hơn
+    if(warm) key = (s.v + s.c) >= 0 ? "warmSpring" : "warmAutumn";
+    else     key = (s.v - s.c) >= 0 ? "coolSummer" : "coolWinter";
+  }
+  // mùa gần kề (dựa vào trục mạnh thứ hai) để gợi ý thêm
+  const second = cand[1][0];
+  let alt;
+  if(second === "v") alt = s.v > 0 ? (warm?"lightSpring":"lightSummer") : (warm?"deepAutumn":"deepWinter");
+  else if(second === "c") alt = s.c > 0 ? (warm?"brightSpring":"brightWinter") : (warm?"softAutumn":"softSummer");
+  else alt = warm ? ((s.v+s.c)>=0?"warmSpring":"warmAutumn") : ((s.v-s.c)>=0?"coolSummer":"coolWinter");
+  return {key, alt: alt===key ? null : alt};
+}
+
+/* =========================================================
+   HIỂN THỊ KẾT QUẢ
+   ========================================================= */
+function showResult(scores){
+  const s = scores || scoreAxes();
+  const {key, alt} = pickSeason(s);
+  renderSeason(key, s, alt);
+  $("result").style.display = "block";
+  $("result").scrollIntoView({behavior:"smooth"});
+  $("progBar").style.width = "100%";
+}
+
+function renderSeason(key, s, alt){
+  resultKey = key;
+  const S = SEASONS[key];
+  $("rName").textContent = S.vi;
+  $("rEn").textContent = S.en;
+  $("rDesc").textContent = S.desc;
+
+  // 3 thanh trục (chỉ hiện khi có điểm từ bài test)
+  if(s){
+    const axis = (name,left,right,val,grad)=>`<div class="axis"><label><span>${left}</span><b>${name}</b><span>${right}</span></label>
+      <div class="bar" style="background:${grad}"><span class="dot" style="left:${(val+1)/2*100}%"></span></div></div>`;
+    $("rAxes").innerHTML =
+      axis("Tông nền","Lạnh","Ấm",s.t,"linear-gradient(90deg,#5B7FC7,#D9CFD6,#E08A3C)") +
+      axis("Độ sáng","Đậm","Sáng",s.v,"linear-gradient(90deg,#2B211C,#A58B7A,#F7F1E8)") +
+      axis("Độ trong","Dịu","Rực",s.c,"linear-gradient(90deg,#9A9493,#C7A0AE,#FF2E7E)");
+    $("rAlt").innerHTML = alt ? `Bạn cũng có nét của <b>${SEASONS[alt].vi}</b> (${SEASONS[alt].en}). Hãy thử cả hai bảng màu trong Gương thử màu.` :
+      (Math.abs(s.t)<0.2 ? "Tông nền của bạn khá trung tính, nên bạn có thể mặc được cả một số màu của mùa bên cạnh." : "");
+  } else { $("rAxes").innerHTML = ""; $("rAlt").textContent = ""; }
+
+  // bảng màu
+  $("rPalette").innerHTML = S.palette.map(([hex,name])=>
+    `<button class="swatch" data-hex="${hex}" title="Sao chép ${hex}"><div class="c" style="background:${hex}"></div><div class="t"><b>${name}</b>${hex}</div></button>`).join("");
+  $("rPalette").querySelectorAll(".swatch").forEach(b=> b.onclick = ()=> copy(b.dataset.hex, `Đã sao chép ${b.dataset.hex}`));
+
+  $("rAvoid").innerHTML = S.avoid.map(h=>`<i style="background:${h}" title="${h}"></i>`).join("");
+
+  // gợi ý
+  $("rTips").innerHTML = `
+    <div class="card"><h3>💄 Trang điểm</h3><ul><li>Son: ${S.lip}</li><li>Má hồng cùng tông với son</li><li>Kem nền nên chọn tông ${["spring","autumn"].includes(S.family)?"vàng / ấm (W)":"hồng / lạnh (C)"}</li></ul></div>
+    <div class="card"><h3>💍 Trang sức</h3><ul><li>Kim loại hợp: ${S.metal}</li><li>Phụ kiện kính, khuyên tai gần mặt nên theo tông này</li></ul></div>
+    <div class="card"><h3>👕 Màu trung tính</h3><ul><li>${S.neutral}</li><li>Dùng làm nền cho quần, áo khoác, túi</li></ul></div>`;
+
+  // cập nhật cặp màu trong gương thử
+  buildPairs();
+}
+
+/* sao chép văn bản + thông báo nhỏ */
+function copy(text,msg){
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+    .then(()=>toast(msg)).catch(()=>toast("Trình duyệt không cho phép sao chép"));
+}
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1800); }
+
+$("copyResult").onclick = ()=>{
+  const S = SEASONS[resultKey];
+  copy(`Personal colour của mình: ${S.vi} (${S.en})\nBảng màu: ${S.palette.map(p=>p[1]+" "+p[0]).join(", ")}\nSon: ${S.lip}\nTrang sức: ${S.metal}`, "Đã sao chép kết quả");
+};
+$("redo").onclick = ()=>{ answers.fill(null); current=0; renderQuestion(); $("result").style.display="none"; $("quiz").scrollIntoView({behavior:"smooth"}); };
+
+/* =========================================================
+   GƯƠNG THỬ MÀU
+   Ảnh được đọc bằng FileReader và chỉ hiển thị trong trình duyệt.
+   ========================================================= */
+const BASE_PAIRS = [
+  {name:"Vàng vs Bạc",desc:"Kiểm tra tông nền",a:["linear-gradient(135deg,#B8860B,#FFE08A,#C9962B)","Vàng"],b:["linear-gradient(135deg,#8E8E8E,#F4F4F4,#A0A0A0)","Bạc"]},
+  {name:"Kem vs Trắng tinh",desc:"Kiểm tra tông nền",a:["#F3E5C8","Kem"],b:["#FFFFFF","Trắng tinh"]},
+  {name:"Cam san hô vs Hồng fuchsia",desc:"Ấm hay lạnh",a:["#FF7F50","San hô (ấm)"],b:["#D2145A","Fuchsia (lạnh)"]},
+  {name:"Pastel vs Màu đậm",desc:"Kiểm tra độ sáng",a:["#F4C2C2","Hồng phấn"],b:["#4B0E2B","Mận đậm"]},
+  {name:"Rực rỡ vs Pha khói",desc:"Kiểm tra độ trong",a:["#00B5E2","Xanh rực"],b:["#7D9C9F","Xanh khói"]},
+  {name:"Đen vs Nâu socola",desc:"Đông hay Thu",a:["#000000","Đen"],b:["#5C3317","Socola"]}
+];
+let activePair = 0;
+function buildPairs(){
+  const list = BASE_PAIRS.slice();
+  if(resultKey){
+    const S = SEASONS[resultKey];
+    list.unshift({name:`Bảng màu ${S.vi} vs Màu nên tránh`,desc:"Từ kết quả test của bạn",
+      a:[S.palette[0][0],S.palette[0][1]], b:[S.avoid[0],"Màu nên tránh"], mine:true});
+  }
+  $("pairs").innerHTML = list.map((p,i)=>`<button class="pair ${i===activePair?"active":""}" data-i="${i}">
+     <span class="duo"><i style="background:${p.a[0]}"></i><i style="background:${p.b[0]}"></i></span>
+     <span><b>${p.name}</b><small>${p.desc}</small></span></button>`).join("");
+  $("pairs").querySelectorAll(".pair").forEach(b=> b.onclick = ()=>{ activePair=+b.dataset.i; buildPairs(); });
+  applyPair(list[activePair] || list[0]);
+}
+function applyPair(p){
+  $("mirrorA").style.background = p.a[0]; $("labelA").textContent = p.a[1];
+  $("mirrorB").style.background = p.b[0]; $("labelB").textContent = p.b[1];
+}
+$("fileInput").onchange = e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=> ["faceA","faceB"].forEach(id=>{ const el=$(id); el.style.backgroundImage=`url(${r.result})`; el.textContent=""; });
+  r.readAsDataURL(f);
+};
+
+/* =========================================================
+   THƯ VIỆN 12 MÙA
+   ========================================================= */
+$("lib").innerHTML = Object.entries(SEASONS).map(([k,S])=>`<button class="lib-item" data-k="${k}">
+   <div class="strip">${S.palette.slice(0,6).map(p=>`<i style="background:${p[0]}"></i>`).join("")}</div>
+   <h3>${S.vi}</h3><small>${S.en}</small></button>`).join("");
+$("lib").querySelectorAll(".lib-item").forEach(b=> b.onclick = ()=>{
+  renderSeason(b.dataset.k, null, null);
+  $("result").style.display="block";
+  $("result").scrollIntoView({behavior:"smooth"});
+});
+
+/* khởi động */
+renderQuestion();
+buildPairs();
+</script>
+</body>
+</html>
